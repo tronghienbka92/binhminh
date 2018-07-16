@@ -65,6 +65,14 @@ namespace Nop.Services.NhaXes
             }
             return query.ToList();
         }
+        public virtual List<NhanVien> GetAllCtv(int NhaXeId, string ThongTin)
+        {
+            var query = _tableRepository.Table;
+            query = query.Where(c => c.NhaXeID == NhaXeId && (!c.isDelete) && (c.KieuNhanVienID == (int)ENKieuNhanVien.CTV));
+            if (!string.IsNullOrEmpty(ThongTin))
+                query = query.Where(c => c.HoVaTen.Contains(ThongTin));
+            return query.ToList();
+        }
         public virtual NhanVien GetById(int itemId)
         {
             if (itemId == 0)

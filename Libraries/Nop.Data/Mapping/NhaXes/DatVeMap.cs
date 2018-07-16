@@ -38,6 +38,10 @@ namespace Nop.Data.Mapping.NhaXes
              .WithMany()
              .HasForeignKey(p => p.DiemDonId);
 
+            this.HasRequired(p => p.ctv)
+             .WithMany()
+             .HasForeignKey(p => p.CtvId);
+
             this.HasRequired(p => p.nguoitao)
              .WithMany()
              .HasForeignKey(p => p.NguoiTaoId);

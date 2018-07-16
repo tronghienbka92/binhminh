@@ -2591,6 +2591,7 @@
     <Content Include="Views\NhaXeBaoCao\_GetDoanhThuTongHop.cshtml" />
     <Content Include="Views\Limousine\TestUrlDecode.cshtml" />
     <Content Include="Views\Limousine\_TabLichSuBanVe.cshtml" />
+    <Content Include="Views\NhaXeBaoCao\DoanhThuTheoCongTacVien.cshtml" />
     <None Include="Web References\vn.worldsms.wcf\APISMS.disco" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

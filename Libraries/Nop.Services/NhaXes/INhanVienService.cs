@@ -10,6 +10,7 @@ namespace Nop.Services.NhaXes
            int pageIndex = 0,
            int pageSize = int.MaxValue);
         List<NhanVien> GetAllLaiXePhuXeByNhaXeId(int NhaXeId);
+        List<NhanVien> GetAllCtv(int NhaXeId, string ThongTin);
         NhanVien GetById(int itemId);
         NhanVien GetByCustomerId(int CustomerId);
         void Insert(NhanVien _item);

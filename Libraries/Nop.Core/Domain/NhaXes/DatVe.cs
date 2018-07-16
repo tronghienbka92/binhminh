@@ -53,6 +53,8 @@ namespace Nop.Core.Domain.NhaXes
         public virtual NhanVien nguoitao { get; set; }
         public virtual NhanVien nguoichuyen { get; set; }
         public virtual NhanVien nguoihuy { get; set; }
+        public int? CtvId { get; set; }
+        public virtual NhanVien ctv { get; set; }
         public DateTime NgayTao { get; set; }
         public Decimal GiaTien { get; set; }
         public bool isThanhToan { get; set; }

@@ -36,17 +36,18 @@
                     @if (Model.isAdmin)
                     {
                         <tr>
-                            <td style="vertical-align:top;text-align:left" colspan="2">Tùy chỉnh giá vé:
+                            <td style="vertical-align:top;text-align:left" colspan="2">
+                                Tùy chỉnh giá vé:
                                 <input type="text" id="txtDatVeGiaVeMoi" value="@Model.GiaTien" />
                             </td>
-                        </tr>                        
+                        </tr>
                     }
-                    
+
                     <tr>
                         <td style="width:80px;vertical-align:middle;">
                             <strong style="color:maroon;font-size:12px" id="lbDatVeGiaVe">@Model.GiaTien.ToString("###,###,##0") đ</strong>
-                            <input type="hidden" id="hidDatVeGiaVe" value="@Model.GiaTien" />                                                     
-                            
+                            <input type="hidden" id="hidDatVeGiaVe" value="@Model.GiaTien" />
+
                         </td>
                         <td style="vertical-align:top;text-align:left">
                             <ul id="mnChonBangGiaVe" style="width:150px">
@@ -72,7 +73,7 @@
                                             $('#hidDatVeGiaVe').val(_giaveitem.attr("data-giave"));
                                             if($('#txtDatVeGiaVeMoi').length)
                                                 $('#txtDatVeGiaVeMoi').val(_giaveitem.attr("data-giave"));
-                                        }                                        
+                                        }
                                     }
                                     $("#mnChonBangGiaVe").kendoMenu({
                                         select: ChonGiaVe,
@@ -84,6 +85,13 @@
                     </tr>
                 </table>
 
+            </td>
+        </tr>
+        <tr>
+            <td>Cộng tác viên</td>
+            <td>
+                <input id="cbbSearchCTV" style="width:280px" value="@Model.TenCtv" />
+                @Html.HiddenFor(m => m.CtvId)
             </td>
         </tr>
         <tr id="trThongTinDatHopDong" style="display:none;color:red">
@@ -265,199 +273,230 @@
     </table>
 
     <script type="text/javascript">
-    function ShowThongTinDatVe(strmsg)
-    {
-        if(strmsg=="" || strmsg==null)
-            $("#trThongTinDatHopDong").hide();
-        else{
-            $("#trThongTinDatHopDong").show();
-            $("#spThongTinDatHopDong").html(strmsg);
-        }
-    }
-    function ThayKHmoi(isThayKHMoi)
-    {
-        if(isThayKHMoi)
+        function ShowThongTinDatVe(strmsg)
         {
-            $('#@Html.FieldIdFor(model => model.KhachHangId)').val(0);
-            $('#@Html.FieldIdFor(model => model.TenKhachHang)').val("");
-            $('#cbbSearchKhachHang').data("kendoComboBox").select(-1);
-            $('#cbbSearchKhachHang').data("kendoComboBox").input.focus();
+            if(strmsg=="" || strmsg==null)
+                $("#trThongTinDatHopDong").hide();
+            else{
+                $("#trThongTinDatHopDong").show();
+                $("#spThongTinDatHopDong").html(strmsg);
+            }
         }
-        else
+        function ThayKHmoi(isThayKHMoi)
         {
-            $('#@Html.FieldIdFor(model => model.KhachHangId)').val(-1);
-            $('#@Html.FieldIdFor(model => model.TenKhachHang)').val("");
-            $('#@Html.FieldIdFor(model => model.TenKhachHang)').focus();
-            $("#trSearchKhachHang").hide();
-        }
-    }
-    function ShowHideDiaChiNha(isFocus) {
-        var isChecked = $('#@Html.FieldIdFor(model => model.isDonTaxi)').is(':checked');
-
-        if (isChecked) {
-            $("#trDonTaxi").show();
-            if(isFocus)
-                $('#@Html.FieldIdFor(model => model.DiaChiNha)').focus();
-        }
-        else {
-            $("#trDonTaxi").hide();
-            if(isFocus)
-                $('#@Html.FieldIdFor(model => model.DiemDonId)').focus();
-        }
-    }
-    $(document).ready(function () {
-
-        //hien thi thong tin
-        //ShowHideDiaChiNha(false);
-        setTimeout(function () {
-            if(@Model.KhachHangId==-1)
+            if(isThayKHMoi)
             {
-                $("#trSearchKhachHang").hide();
-                $('#@Html.FieldIdFor(model => model.TenKhachHang)').focus();
+                $('#@Html.FieldIdFor(model => model.KhachHangId)').val(0);
+                $('#@Html.FieldIdFor(model => model.TenKhachHang)').val("");
+                $('#cbbSearchKhachHang').data("kendoComboBox").select(-1);
+                $('#cbbSearchKhachHang').data("kendoComboBox").input.focus();
             }
             else
             {
-                $('#cbbSearchKhachHang').data("kendoComboBox").input.focus();
+                $('#@Html.FieldIdFor(model => model.KhachHangId)').val(-1);
+                $('#@Html.FieldIdFor(model => model.TenKhachHang)').val("");
+                $('#@Html.FieldIdFor(model => model.TenKhachHang)').focus();
+                $("#trSearchKhachHang").hide();
             }
-
-        }, 500);
-        $("#@Html.FieldIdFor(model => model.TenDiemDon)").keydown(function (event) {
-            if (event.keyCode == 13) {
-                $('#@Html.FieldIdFor(model => model.TenDiemTra)').focus();
-                return false;
-            }
-        });
-        $("#@Html.FieldIdFor(model => model.TenDiemTra)").keydown(function (event) {
-            if (event.keyCode == 13) {
-                $('#@Html.FieldIdFor(model => model.isThanhToan)').focus();
-                return false;
-            }
-        });
-
-        $("#@Html.FieldIdFor(model => model.isThanhToan)").keydown(function (event) {
-            if (event.keyCode == 13) {
-                $('#@Html.FieldIdFor(model => model.GhiChu)').focus();
-                return false;
-            }
-        });
-        $("#@Html.FieldIdFor(model => model.GhiChu)").keydown(function (event) {
-            if (event.keyCode == 13) {
-                $('#btnThanhToanGiuCho').click();
-                return false;
-            }
-        });
-        $('#cbbSearchKhachHang').kendoComboBox({
-            placeholder: "Số điện thoại",
-            dataTextField: "DienThoai",
-            dataValueField: "Id",
-            filter: "contains",
-            autoBind: false,
-            minLength: 6,
-            dataSource: {
-                type: "json",
-                serverFiltering: true,
-                transport: {
-                    read: {
-                        url: "@Html.Raw(Url.Action("GetKhachHangInNhaXe", "Limousine"))",
-                        data: dataSearchKhachHang
-                    }
-                }
-            },
-            change: onChange
-        });
-        function onChange() {
-            var DataItem = this.dataItem();
-            $('#@Html.FieldIdFor(model => model.KhachHangId)').val(DataItem.Id);
-            $('#@Html.FieldIdFor(model => model.TenKhachHang)').val(DataItem.Ten);
-            $('#@Html.FieldIdFor(model => model.TenDiemDon)').val(DataItem.TenDiemDon);
-            $('#@Html.FieldIdFor(model => model.TenDiemTra)').val(DataItem.TenDiemTra);
-            $('#SoLanDi').html(DataItem.SoLanDi);
-            ShowThongTinDatVe(DataItem.ChuyenDiTrongNgay);
-            $('#@Html.FieldIdFor(model => model.TenDiemDon)').focus();
-
         }
+        function ShowHideDiaChiNha(isFocus) {
+            var isChecked = $('#@Html.FieldIdFor(model => model.isDonTaxi)').is(':checked');
 
-        function dataSearchKhachHang() {
-            var thongtin = $('#cbbSearchKhachHang').data("kendoComboBox").text();
-            var ngaydi="@Model.NgayDi.ToString("yyyy-MM-dd")";
-            return {
-                ThongTin: thongtin,
-                isAdv:true,
-                NgayDi:ngaydi,
-                HanhTrinhId: '@Model.HanhTrinhId',
-
-            };
+            if (isChecked) {
+                $("#trDonTaxi").show();
+                if(isFocus)
+                    $('#@Html.FieldIdFor(model => model.DiaChiNha)').focus();
+            }
+            else {
+                $("#trDonTaxi").hide();
+                if(isFocus)
+                    $('#@Html.FieldIdFor(model => model.DiemDonId)').focus();
+            }
         }
-        $('#btnThanhToanGiuCho').click(function () {
-            //kiem tra cac thong tin
-            var khachhangcbb = $('#cbbSearchKhachHang').data("kendoComboBox");
-            var khachhangid = $('#@Html.FieldIdFor(model => model.KhachHangId)').val();
-            if (khachhangid == 0)
-            {
-                var _dienthoai = khachhangcbb.value();
-                if (_dienthoai == "") {
-                    alert('Bạn chưa nhập số điện thoại khách hàng');
-                    khachhangcbb.input.focus();
-                    return;
-                }
-                if ($('#@Html.FieldIdFor(model => model.TenKhachHang)').val() == "") {
-                    alert('Bạn chưa nhập tên khách hàng');
+        $(document).ready(function () {
+
+            //hien thi thong tin
+            //ShowHideDiaChiNha(false);
+            setTimeout(function () {
+                if(@Model.KhachHangId==-1)
+                {
+                    $("#trSearchKhachHang").hide();
                     $('#@Html.FieldIdFor(model => model.TenKhachHang)').focus();
-                    return;
                 }
-            }
-            $('#btnThanhToanGiuCho').attr('disabled', true);
-            var paradata = additionalData();
-            $.ajax({
-                cache: false,
-                type: "POST",
-                data: paradata,
-                dataType: 'json',
-                url: "@(Url.Action("_DatVe", "Limousine"))",
-                success: function (data) {
-                    CloseWindowDatMuaVe(true);
+                else
+                {
+                    $('#cbbSearchKhachHang').data("kendoComboBox").input.focus();
+                }
+
+            }, 500);
+            $("#@Html.FieldIdFor(model => model.TenDiemDon)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $('#@Html.FieldIdFor(model => model.TenDiemTra)').focus();
+                    return false;
+                }
+            });
+            $("#@Html.FieldIdFor(model => model.TenDiemTra)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $('#@Html.FieldIdFor(model => model.isThanhToan)').focus();
+                    return false;
+                }
+            });
+
+            $("#@Html.FieldIdFor(model => model.isThanhToan)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $('#@Html.FieldIdFor(model => model.GhiChu)').focus();
+                    return false;
+                }
+            });
+            $("#@Html.FieldIdFor(model => model.GhiChu)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $('#btnThanhToanGiuCho').click();
+                    return false;
+                }
+            });
+            $('#cbbSearchKhachHang').kendoComboBox({
+                placeholder: "Số điện thoại",
+                dataTextField: "DienThoai",
+                dataValueField: "Id",
+                filter: "contains",
+                autoBind: false,
+                minLength: 6,
+                dataSource: {
+                    type: "json",
+                    serverFiltering: true,
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("GetKhachHangInNhaXe", "Limousine"))",
+                            data: dataSearchKhachHang
+                        }
+                    }
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    return alert('Error while process ThanhToanGiuCho');
-                    $('#btnThanhToanGiuCho').attr('disabled', false);
+                change: onChange
+            });
+            function onChange() {
+                var DataItem = this.dataItem();
+                $('#@Html.FieldIdFor(model => model.KhachHangId)').val(DataItem.Id);
+                $('#@Html.FieldIdFor(model => model.TenKhachHang)').val(DataItem.Ten);
+                $('#@Html.FieldIdFor(model => model.TenDiemDon)').val(DataItem.TenDiemDon);
+                $('#@Html.FieldIdFor(model => model.TenDiemTra)').val(DataItem.TenDiemTra);
+                $('#SoLanDi').html(DataItem.SoLanDi);
+                ShowThongTinDatVe(DataItem.ChuyenDiTrongNgay);
+                $('#@Html.FieldIdFor(model => model.TenDiemDon)').focus();
+
+            }
+
+            function dataSearchKhachHang() {
+                var thongtin = $('#cbbSearchKhachHang').data("kendoComboBox").text();
+                var ngaydi="@Model.NgayDi.ToString("yyyy-MM-dd")";
+                return {
+                    ThongTin: thongtin,
+                    isAdv:true,
+                    NgayDi:ngaydi,
+                    HanhTrinhId: '@Model.HanhTrinhId',
+
+                };
+            }
+            //cbb ctv
+            $('#cbbSearchCTV').kendoComboBox({
+                placeholder: "Tên cộng tác viên",
+                dataTextField: "HoVaTen",
+                dataValueField: "Id",
+                filter: "contains",
+                autoBind: false,
+                minLength: 6,
+                dataSource: {
+                    type: "json",
+                    serverFiltering: true,
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("GetCongTacVien", "Limousine"))",
+                            data: dataSearchNhanVien
+                        }
+                    }
+                },
+                change: onChange1
+            });
+            function onChange1() {
+                var DataItem = this.dataItem();
+                $('#@Html.FieldIdFor(model => model.CtvId)').val(DataItem.Id);
+            }
+            function dataSearchNhanVien() {
+                var thongtin = $('#cbbSearchCTV').data("kendoComboBox").text();
+                return {
+                    ThongTin: thongtin
+                };
+            }
+                $('#btnThanhToanGiuCho').click(function () {
+                    //kiem tra cac thong tin
+                    var khachhangcbb = $('#cbbSearchKhachHang').data("kendoComboBox");
+                    var khachhangid = $('#@Html.FieldIdFor(model => model.KhachHangId)').val();
+                    if (khachhangid == 0)
+                    {
+                        var _dienthoai = khachhangcbb.value();
+                        if (_dienthoai == "") {
+                            alert('Bạn chưa nhập số điện thoại khách hàng');
+                            khachhangcbb.input.focus();
+                            return;
+                        }
+                        if ($('#@Html.FieldIdFor(model => model.TenKhachHang)').val() == "") {
+                            alert('Bạn chưa nhập tên khách hàng');
+                            $('#@Html.FieldIdFor(model => model.TenKhachHang)').focus();
+                            return;
+                        }
+                    }
+                    $('#btnThanhToanGiuCho').attr('disabled', true);
+                    var paradata = additionalData();
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        data: paradata,
+                        dataType: 'json',
+                        url: "@(Url.Action("_DatVe", "Limousine"))",
+                        success: function (data) {
+                            CloseWindowDatMuaVe(true);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            return alert('Error while process ThanhToanGiuCho');
+                            $('#btnThanhToanGiuCho').attr('disabled', false);
+                        }
+
+                    });
+                });
+                function additionalData() {
+                    var khachhangcbb = $('#cbbSearchKhachHang').data("kendoComboBox");
+                    var khachhangid = $('#@Html.FieldIdFor(model => model.KhachHangId)').val();
+                    var _dienthoai = khachhangcbb.text();
+                    var _giave=$('#hidDatVeGiaVe').val();
+                    if($('#txtDatVeGiaVeMoi').length)
+                    {
+                        _giave=$('#txtDatVeGiaVeMoi').val();
+                    }
+                    return {
+                        "Id": '@Model.Id',
+                        "KhachHangId": khachhangid,
+                        "DienThoai": _dienthoai,
+                        "NgayDi": $('#@Html.FieldIdFor(model => model.NgayDi)').val(),
+                        "TenKhachHang": $('#@Html.FieldIdFor(model => model.TenKhachHang)').val(),
+                        "CtvId":$('#@Html.FieldIdFor(model=>model.CtvId)').val(),
+                        "DiaChiNha": $('#@Html.FieldIdFor(model => model.TenDiemDon)').val(),
+                        "isDonTaxi": false,
+                        "GhiChu": $('#@Html.FieldIdFor(model => model.GhiChu)').val(),
+                        "DiemDonId": $('#@Html.FieldIdFor(model => model.DiemDonId)').val(),
+                        "LichTrinhId": $('#@Html.FieldIdFor(model => model.LichTrinhId)').val(),
+                        "HanhTrinhId": '@Model.HanhTrinhId',
+                        "TrangThaiId": '@Model.TrangThaiId',
+                        "ChuyenDiId": '@Model.ChuyenDiId',
+                        "SoDoGheId": '@Model.SoDoGheId',
+                        "isThanhToan": $('#@Html.FieldIdFor(model => model.isThanhToan)').is(':checked'),
+                        "isNoiBai": $('#@Html.FieldIdFor(model => model.isNoiBai)').is(':checked'),
+                        "TenDiemDon": $('#@Html.FieldIdFor(model => model.TenDiemDon)').val(),
+                        "TenDiemTra": $('#@Html.FieldIdFor(model => model.TenDiemTra)').val(),
+                        "GiaTien": _giave,
+                    };
                 }
 
             });
-        });
-        function additionalData() {
-            var khachhangcbb = $('#cbbSearchKhachHang').data("kendoComboBox");
-            var khachhangid = $('#@Html.FieldIdFor(model => model.KhachHangId)').val();
-            var _dienthoai = khachhangcbb.text();
-            var _giave=$('#hidDatVeGiaVe').val();
-            if($('#txtDatVeGiaVeMoi').length)
-            {
-                _giave=$('#txtDatVeGiaVeMoi').val();
-            }
-            return {
-                "Id": '@Model.Id',
-                "KhachHangId": khachhangid,
-                "DienThoai": _dienthoai,
-                "NgayDi": $('#@Html.FieldIdFor(model => model.NgayDi)').val(),
-                "TenKhachHang": $('#@Html.FieldIdFor(model => model.TenKhachHang)').val(),
-                "DiaChiNha": $('#@Html.FieldIdFor(model => model.TenDiemDon)').val(),
-                "isDonTaxi": false,
-                "GhiChu": $('#@Html.FieldIdFor(model => model.GhiChu)').val(),
-                "DiemDonId": $('#@Html.FieldIdFor(model => model.DiemDonId)').val(),
-                "LichTrinhId": $('#@Html.FieldIdFor(model => model.LichTrinhId)').val(),
-                "HanhTrinhId": '@Model.HanhTrinhId',
-                "TrangThaiId": '@Model.TrangThaiId',
-                "ChuyenDiId": '@Model.ChuyenDiId',
-                "SoDoGheId": '@Model.SoDoGheId',
-                "isThanhToan": $('#@Html.FieldIdFor(model => model.isThanhToan)').is(':checked'),
-                "isNoiBai": $('#@Html.FieldIdFor(model => model.isNoiBai)').is(':checked'),
-                "TenDiemDon": $('#@Html.FieldIdFor(model => model.TenDiemDon)').val(),
-                "TenDiemTra": $('#@Html.FieldIdFor(model => model.TenDiemTra)').val(),
-                "GiaTien": _giave,
-            };
-        }
-
-    });
 
 
-</script>
+    </script>
 }

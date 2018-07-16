@@ -52,6 +52,8 @@ namespace Nop.Web.Models.NhaXes
         public string GhiChu { get; set; }
         public int NguoiTaoId { get; set; }
         public String TenNguoiTao { get; set; }
+        public int? CtvId { get; set; }
+        public String TenCtv { get; set; }
         public DateTime NgayTao { get; set; }
         public Decimal GiaTien { get; set; }
         public bool isEdit { get; set; }
@@ -63,6 +65,7 @@ namespace Nop.Web.Models.NhaXes
         public string TenDiemTra { get; set; }
         public List<BangGiaVe> BangGiaVes { get; set; }
         public bool isAdmin { get; set; }
+        public bool disable { get; set; }
     }
     public class DatVeCopyModel
     {

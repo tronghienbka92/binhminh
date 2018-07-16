@@ -166,6 +166,15 @@ namespace Nop.Web.Controllers
                 ddls.Insert(0, new SelectListItem { Text = "--------Chọn--------", Value = "0", Selected = 0 == HanhTrinhId });
             return ddls;
         }
+        public ActionResult GetCongTacVien(string ThongTin)
+        {
+            var nhanviens = _nhanvienService.GetAllCtv(_workContext.NhaXeId, ThongTin).Select(c =>
+            {
+                var nv = c.toModel();
+                return nv;
+            }).ToList();
+            return Json(nhanviens, JsonRequestBehavior.AllowGet);
+        }
         List<SelectListItem> PrepareLichTrinhList(int NhaXeId, ref int LichTrinhId, bool isChonLichTrinh = true)
         {
             var _lichtrinhid = LichTrinhId;
@@ -402,6 +411,7 @@ namespace Nop.Web.Controllers
                 _limousinebanveService.InsertDatVeNote(_datveitem.Id, _note);
                 _datveitem.isDonTaxi = model.isDonTaxi;
                 _datveitem.DiaChiNha = model.DiaChiNha;
+                _datveitem.CtvId = model.CtvId;
                 _datveitem.GhiChu = model.GhiChu;
                 if (model.KhachHangId>0)
                     _datveitem.KhachHangId = model.KhachHangId;
@@ -426,6 +436,7 @@ namespace Nop.Web.Controllers
                     _datveitem.GhiChu = model.GhiChu;
                     _datveitem.KhachHangId = model.KhachHangId;
                     _datveitem.isNoiBai = model.isNoiBai;
+                    _datveitem.CtvId = model.CtvId;
                     _datveitem.isThanhToan = model.isThanhToan;
                     _datveitem.trangthai = ENTrangThaiDatVe.DA_XEP_CHO;
                     if (model.DiemDonId>0)
@@ -1189,15 +1200,21 @@ namespace Nop.Web.Controllers
                         foreach (var dv in arrdatve)
                         {
                             //kiem tra thong tin ve da het han 2 phut
-                            if (dv.trangthai==ENTrangThaiDatVe.MOI && dv.NgayTao.AddSeconds(THOI_GIAN_GHE_DAT_CHO) < DateTime.Now)
+                            if (dv.trangthai == ENTrangThaiDatVe.MOI && dv.NgayTao.AddSeconds(THOI_GIAN_GHE_DAT_CHO) < DateTime.Now)
                             {
                                 ///_limousinebanveService.DeleteDatVe(dv);
                                 continue;
-                            }                                
+                            }
                             if (dv.SoDoGheId == s.Id)
                             {
-                                
                                 modelsodoghe.DatVes[s.y, s.x] = dv.toModel(_localizationService);
+                                if (_workContext.CurrentNhanVien.KieuNhanVien == ENKieuNhanVien.CTV)
+                                {
+                                    if (dv.nguoitao.Id != _workContext.CurrentNhanVien.Id)
+                                    {
+                                        modelsodoghe.DatVes[s.y, s.x].disable = true;
+                                    }
+                                }
                                 break;
                             }
                         }

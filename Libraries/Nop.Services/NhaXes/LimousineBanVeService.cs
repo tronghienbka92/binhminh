@@ -930,6 +930,79 @@ namespace Nop.Services.NhaXes
             }
             return tknhanvien.OrderByDescending(c => c.GiaTri).ToList();
         }
+        public List<ThongKeItem> GetDoanhThuBanVeTheoNgayCTV(DateTime tuNgay, DateTime denNgay, int nhaxeid, int VanPhongId)
+        {
+            denNgay = denNgay.Date.AddDays(1);
+            var phoives = _datveRepository.Table
+               .Where(c => c.NhaXeId == nhaxeid
+                   && c.nguoitao.VanPhongID == VanPhongId
+                   && (c.nguoitao.KieuNhanVienID == (int)ENKieuNhanVien.CTV || c.CtvId > 0)
+                    && (c.TrangThaiId == (int)ENTrangThaiDatVe.DA_DI || c.TrangThaiId == (int)ENTrangThaiDatVe.DA_XEP_CHO)
+                    && (c.NgayDi < denNgay)
+                     && (c.NgayDi >= tuNgay)).ToList()
+             .Select(c => new
+             {
+                 GiaTien = c.GiaTien,
+                 NgayDi = c.NgayDi.Date,
+                 TrangThaiId = c.TrangThaiId,
+                 NguoiChuyenId = c.NguoiChuyenId,
+                 NguoiHuyId = c.NguoiHuyId,
+             })
+             .GroupBy(c => new { c.NgayDi })
+             .Select(g => new ThongKeItem
+             {
+                 ItemDataDate = g.Key.NgayDi,
+                 GiaTri = g.Where(a => a.TrangThaiId != (int)(int)ENTrangThaiDatVe.HUY).Sum(a => a.GiaTien),
+                 SoLuong = g.Count(),
+                 SoLuongDat = g.Count(a => a.TrangThaiId != (int)ENTrangThaiDatVe.HUY),
+                 SoLuongChuyen = g.Count(a => a.NguoiChuyenId > 0),
+                 SoLuongHuy = g.Count(a => a.NguoiHuyId > 0)
+             })
+             .OrderByDescending(sx => sx.ItemDataDate)
+                //.OrderByDescending(sx => sx.GiaTri)
+             .ToList();
+            var tknhanvien = new List<ThongKeItem>();
+            foreach (var item in phoives)
+            {
+                item.Nhan = item.ItemDataDate.ToString("dd-MM-yyyy");
+                item.NhanSapXep = item.ItemDataDate.ToString("yyyyMMdd");
+                //item.SoLuongChuyen
+                tknhanvien.Add(item);
+            }
+            return tknhanvien;
+        }
+        public List<ThongKeItem> GetDoanhThuBanVeTheoCTV(int nhaxeid, int VanPhongId, DateTime NgayBan)
+        {
+            var tknhanvien = new List<ThongKeItem>();
+            var query = _datveRepository.Table
+               .Where(c => c.NhaXeId == nhaxeid
+                    && (c.TrangThaiId == (int)ENTrangThaiDatVe.DA_DI || c.TrangThaiId == (int)ENTrangThaiDatVe.DA_XEP_CHO)
+                    && (c.NgayDi.Year == NgayBan.Year)
+                    && (c.nguoitao.KieuNhanVienID == (int)ENKieuNhanVien.CTV || c.CtvId > 0)
+                     && (c.NgayDi.Month == NgayBan.Month)
+                     && (c.NgayDi.Day == NgayBan.Day));
+            var datves = query.ToList();
+            //lay tat ca nhan vien tham gia vao giao dich dat ve, chuyen ve, huy ve
+            var nhanvienids = query.Where(c => c.nguoitao.KieuNhanVienID == (int)ENKieuNhanVien.CTV).Select(c => c.NguoiTaoId).Distinct().ToList();
+            //nhanvienids.AddRange(query.Where(c => c.NguoiHuyId > 0).Select(c => c.NguoiHuyId).Distinct().ToList().Select(c => c.GetValueOrDefault(0)));
+            //nhanvienids.AddRange(query.Where(c => c.NguoiChuyenId > 0).Select(c => c.NguoiChuyenId).Distinct().ToList().Select(c => c.GetValueOrDefault(0)));
+            nhanvienids.AddRange(query.Where(c => c.CtvId > 0).Select(c => c.CtvId).Distinct().ToList().Select(c => c.GetValueOrDefault(0)));
+            //var LoaiNhanVienBanVe=new int[] {(int)ENKieuNhanVien.LaiXe,(int)ENKieuNhanVien.PhuXe};
+            var listNhanVien = _nhanvienRepository.Table.Where(c => c.VanPhongID == VanPhongId && nhanvienids.Contains(c.Id)).ToList();
+            foreach (var item in listNhanVien)
+            {
+                var nhanvien = new ThongKeItem();
+                nhanvien.ItemId = item.Id;
+                nhanvien.SoLuongDat = query.Where(c => (c.NguoiTaoId == item.Id || c.CtvId == item.Id) && c.TrangThaiId != (int)ENTrangThaiDatVe.HUY).Count();
+                nhanvien.SoLuongChuyen = query.Where(c => c.NguoiChuyenId == item.Id).Count();
+                nhanvien.SoLuongHuy = query.Where(c => c.NguoiHuyId == item.Id).Count();
+                var _giatri = query.Where(c => (c.NguoiTaoId == item.Id || c.CtvId == item.Id) && c.TrangThaiId != (int)ENTrangThaiDatVe.HUY).Select(g => g.GiaTien).ToList();
+                if (_giatri.Count > 0)
+                    nhanvien.GiaTri = _giatri.Sum();
+                tknhanvien.Add(nhanvien);
+            }
+            return tknhanvien.OrderByDescending(c => c.GiaTri).ToList();
+        }
         public List<KhachHangMuaVeItem> GetDetailDoanhThu(int nhaxeid, DateTime ngaydi, int nhanvienid = 0)
         {
             var phoives = _datveRepository.Table

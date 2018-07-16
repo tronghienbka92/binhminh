@@ -54,7 +54,8 @@ namespace Nop.Core.Domain.NhaXes
         LaiXe = 4,
         PhuXe = 5,
         Khac = 6,
-        HanhChinh = 7
+        HanhChinh = 7,
+        CTV = 8
     }
 
     public enum ENGioiTinh

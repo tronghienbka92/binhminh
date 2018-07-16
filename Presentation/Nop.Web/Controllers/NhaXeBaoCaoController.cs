@@ -1426,6 +1426,72 @@ namespace Nop.Web.Controllers
             }
         }
         #endregion
+        #region Doanh thu theo cong tac vien
+        public ActionResult DoanhThuTheoCongTacVien()
+        {
+            if (!this.isRightAccess(_permissionService, StandardPermissionProvider.CVBaoCao) && !this.isRightAccess(_permissionService, StandardPermissionProvider.CVHoatDongBanVe))
+                return AccessDeniedView();
+
+            var modeldoanhthu = new BaoCaoNhaXeModel();
+            //modeldoanhthu.TuNgay = DateTime.Now.AddMonths(-1);
+            modeldoanhthu.TuNgay = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            modeldoanhthu.DenNgay = DateTime.Now;
+            PrepareListVanPhongModel(modeldoanhthu);
+            return View(modeldoanhthu);
+        }
+        [HttpPost]
+        public ActionResult DoanhThuBanVeTheoNgayTheoCTV(DataSourceRequest command, DateTime tuNgay, DateTime denNgay, int VanPhongId)
+        {
+
+            if (!this.isRightAccess(_permissionService, StandardPermissionProvider.CVBaoCao) && !this.isRightAccess(_permissionService, StandardPermissionProvider.CVHoatDongBanVe))
+                return AccessDeniedView();
+
+            var items = _limousinebanveService.GetDoanhThuBanVeTheoNgayCTV(tuNgay, denNgay, _workContext.NhaXeId, VanPhongId);
+            var doanhthus = items.Select(c =>
+            {
+                var _doanhthu = new BaoCaoNhaXeModel.BaoCaoDoanhThuNhanVienModel();
+                PrepareThongKeItemToModel(_doanhthu, c);
+                //_doanhthu.SoLuongDat=items.Where(x=>x.)
+                _doanhthu.NgayBan = c.Nhan;
+                _doanhthu.TongDoanhThu = c.GiaTri;
+                return _doanhthu;
+            }).ToList();
+            var gridModel = new DataSourceResult
+            {
+                Data = doanhthus,
+                Total = doanhthus.Count
+            };
+            return Json(gridModel);
+        }
+        [HttpPost]
+        public ActionResult DoanhThuBanVeTheoNhanVienCTV(DataSourceRequest command, int VanPhongId, string NgayBan)
+        {
+
+            if (!this.isRightAccess(_permissionService, StandardPermissionProvider.CVBaoCao) && !this.isRightAccess(_permissionService, StandardPermissionProvider.CVHoatDongBanVe))
+                return AccessDeniedView();
+            DateTime ngayban = Convert.ToDateTime(NgayBan);
+            var items = _limousinebanveService.GetDoanhThuBanVeTheoCTV(_workContext.NhaXeId, VanPhongId, ngayban);
+            var doanhthus = items.Select(c =>
+            {
+                var _doanhthu = new BaoCaoNhaXeModel.BaoCaoDoanhThuNhanVienModel();
+                PrepareThongKeItemToModel(_doanhthu, c);
+                _doanhthu.NhanVienId = c.ItemId;
+                _doanhthu.NgayBan = NgayBan;
+                _doanhthu.TenNhanVien = _nhanvienService.GetById(_doanhthu.NhanVienId).HoVaTen;
+                _doanhthu.TongDoanhThu = c.GiaTri;
+                return _doanhthu;
+            }).ToList();
+
+
+            var gridModel = new DataSourceResult
+            {
+                Data = doanhthus,
+                Total = doanhthus.Count
+            };
+
+            return Json(gridModel);
+        }
+        #endregion
         public ActionResult ExportExcelLenhPhu(int Id)
         {
             if (!this.isRightAccess(_permissionService, StandardPermissionProvider.CVBaoCao) && !this.isRightAccess(_permissionService, StandardPermissionProvider.CVHoatDongBanVe))

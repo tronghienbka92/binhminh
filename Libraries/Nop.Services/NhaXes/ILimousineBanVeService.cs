@@ -50,6 +50,8 @@ namespace Nop.Services.NhaXes
         void GetLimousineIndex(int NhaXeId, DateTime ngaydi, ENBaoCaoChuKyThoiGian loaithongke, out int SoLuongDatVe, out Decimal DoanhThu, out int SoLuongChuyen);
         List<ThongKeItem> GetDoanhThuBanVeTheoNgay(DateTime tuNgay, DateTime denNgay, int nhaxeid, int VanPhongId);
         List<ThongKeItem> GetDoanhThuBanVeTheoNhanVien(int nhaxeid, int VanPhongId, DateTime NgayBan);
+        List<ThongKeItem> GetDoanhThuBanVeTheoNgayCTV(DateTime tuNgay, DateTime denNgay, int nhaxeid, int VanPhongId);
+        List<ThongKeItem> GetDoanhThuBanVeTheoCTV(int nhaxeid, int VanPhongId, DateTime NgayBan);
         List<KhachHangMuaVeItem> GetDetailDoanhThu(int nhaxeid, DateTime ngaydi, int nhanvienid = 0);
         List<ThongKeItem> GetBaoCaoDoanhThu(int thang, int nam, int nhaxeid, ENBaoCaoChuKyThoiGian ChuKyThoiGianId,string HanhTrinhIds="");
         decimal DoanhThuTuyen(int HanhTrinhId, int thang, int nam, ENBaoCaoQuy QuyId, ENBaoCaoLoaiThoiGian LoaiThoiGianId,string GioBan,string NgayBan, out int SoLuong);

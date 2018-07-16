@@ -753,6 +753,13 @@ namespace Nop.Web.Extensions
             m.HanhTrinhGiaVeId = e.HanhTrinhGiaVeId.GetValueOrDefault(0);
             return m;
         }
+        public static NhanVienModel toModel(this NhanVien e)
+        {
+            var m = new NhanVienModel();
+            m.Id = e.Id;
+            m.HoVaTen = e.HoVaTen;
+            return m;
+        }
         public static KhachHangModel toModel(this KhachHang e)
         {
             var m = new KhachHangModel();

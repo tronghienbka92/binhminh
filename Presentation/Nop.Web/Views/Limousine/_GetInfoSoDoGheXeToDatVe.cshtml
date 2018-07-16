@@ -210,72 +210,80 @@
             _actionlink = "javascript:void(0);";
         }
         <td style="width:@withcol%;">
-            <div class="@_classmenucontext" data_phoiveid="@datveitem.Id" data_sodogheid="@datveitem.SoDoGheId" data_tang="@tang" data_trangthai="@((int)datveitem.trangthai)">
-                <a href="@_actionlink" title="@T("chonve.nhaxe.quanlyphoive.mouserighthint")" style="width:100%;height:100%">
-                    <div class="ghenam_cell @_classbg @_class" style="@stylebgcolorother">
-                        <div class="ghenam_cell_kyhieu">@datveitem.sodoghekyhieu</div>
-                        <div class="ghenam_cell_thongtin">
-                            @if (datveitem.trangthai == ENTrangThaiDatVe.DA_XEP_CHO || datveitem.trangthai == ENTrangThaiDatVe.DA_DI || datveitem.trangthai == ENTrangThaiDatVe.HUY)
-                            {
-                                if (datveitem.GiaTien != Model.chuyendihientai.GiaVe)
+            @if (!datveitem.disable)
+            {
+                <div class="@_classmenucontext" data_phoiveid="@datveitem.Id" data_sodogheid="@datveitem.SoDoGheId" data_tang="@tang" data_trangthai="@((int)datveitem.trangthai)">
+                    <a href="@_actionlink" title="@T("chonve.nhaxe.quanlyphoive.mouserighthint")" style="width:100%;height:100%">
+                        <div class="ghenam_cell @_classbg @_class" style="@stylebgcolorother">
+                            <div class="ghenam_cell_kyhieu">@datveitem.sodoghekyhieu</div>
+                            <div class="ghenam_cell_thongtin">
+                                @if (datveitem.trangthai == ENTrangThaiDatVe.DA_XEP_CHO || datveitem.trangthai == ENTrangThaiDatVe.DA_DI || datveitem.trangthai == ENTrangThaiDatVe.HUY)
                                 {
-                                    <span> Mã HĐ: @datveitem.Ma (<span style="font-weight:bold;color:red">@(datveitem.GiaTien.ToString("###,###,##0"))đ</span>) </span>
-                                }
-                                else
-                                {
-                                    <span> Mã HĐ: @datveitem.Ma</span>
-                                }
-                                if (datveitem.VeChuyenDenId > 0)
-                                {
-                                    <span style="color:red">HD chuyển</span>
-                                }
-                                <br />
-                                <span>KH:  @datveitem.TenKhachHang</span>
-                                if (datveitem.isNoiBai)
-                                {
-                                    <span style="text-decoration:underline;color:red"> Thái Bình </span>
-                                }<br />
-                                <span>
-                                    ĐT:  @datveitem.DienThoai
-                                    @if (!String.IsNullOrEmpty(datveitem.GhiChu))
+                                    if (datveitem.GiaTien != Model.chuyendihientai.GiaVe)
                                     {
-                                        <text>
-                                            (@datveitem.GhiChu)
-                                        </text>
+                                        <span> Mã HĐ: @datveitem.Ma (<span style="font-weight:bold;color:red">@(datveitem.GiaTien.ToString("###,###,##0"))đ</span>) </span>
                                     }
-                                </span><br />
-                                <span>Điểm chờ: @datveitem.TenDiemDon</span><br />
-                                <span>Điểm trả: @datveitem.TenDiemTra</span><br />
-                                if (Model.sodoghe.PhanLoai == ENPhanLoaiPhoiVe.IN_PHOI_VE)
-                                {
-                                    if (datveitem.isThanhToan)
+                                    else
                                     {
-                                        <span>TT: Đã thanh toán</span><br />
+                                        <span> Mã HĐ: @datveitem.Ma</span>
                                     }
+                                    if (datveitem.VeChuyenDenId > 0)
+                                    {
+                                        <span style="color:red">HD chuyển</span>
+                                    }
+                                    <br />
+                                    <span>KH:  @datveitem.TenKhachHang</span>
+                                    if (datveitem.isNoiBai)
+                                    {
+                                        <span style="text-decoration:underline;color:red"> Thái Bình </span>
+                                    }<br />
+                                    <span>
+                                        ĐT:  @datveitem.DienThoai
+                                        @if (!String.IsNullOrEmpty(datveitem.GhiChu))
+                                        {
+                                            <text>
+                                                (@datveitem.GhiChu)
+                                            </text>
+                                        }
+                                    </span><br />
+                                    <span>Điểm chờ: @datveitem.TenDiemDon</span><br />
+                                    <span>Điểm trả: @datveitem.TenDiemTra</span><br />
+                                    if (Model.sodoghe.PhanLoai == ENPhanLoaiPhoiVe.IN_PHOI_VE)
+                                    {
+                                        if (datveitem.isThanhToan)
+                                        {
+                                            <span>TT: Đã thanh toán</span><br />
+                                        }
+
+                                    }
+                                    <span>Người đặt: @datveitem.TenNguoiTao</span><br />
+                                }
+                                else if (datveitem.trangthai == ENTrangThaiDatVe.MOI)
+                                {
+                                    var _timerdatve = datveitem.NgayTao.AddSeconds(Nop.Web.Controllers.LimousineController.THOI_GIAN_GHE_DAT_CHO);
+
+                                    <span>@datveitem.TenNguoiTao đang đặt HD...</span><br />
+                                    <p>Thời gian còn : <span name="timerdatve" id="timerdatve_@datveitem.Id" data-datveid="@datveitem.Id"></span></p>
+                                    <script>
+                                        $(document).ready(function () {
+                                            $('#timerdatve_@datveitem.Id').countdown({ until: new Date(@(_timerdatve.Year),@(_timerdatve.Month-1),@(_timerdatve.Day),@(_timerdatve.Hour),@(_timerdatve.Minute),@(_timerdatve.Second)),onExpiry:HuyGheDatChoTimeout, compact: true, layout: '{mn}:{sn}' });
+                                        });
+                                    </script>
 
                                 }
-                                <span>Người đặt: @datveitem.TenNguoiTao</span><br />
-                            }
-                            else if (datveitem.trangthai == ENTrangThaiDatVe.MOI)
-                            {
-                                var _timerdatve = datveitem.NgayTao.AddSeconds(Nop.Web.Controllers.LimousineController.THOI_GIAN_GHE_DAT_CHO);
-
-                                <span>@datveitem.TenNguoiTao đang đặt HD...</span><br />
-                                <p>Thời gian còn : <span name="timerdatve" id="timerdatve_@datveitem.Id" data-datveid="@datveitem.Id"></span></p>
-                                <script>
-                                    $(document).ready(function () {
-                                        $('#timerdatve_@datveitem.Id').countdown({ until: new Date(@(_timerdatve.Year),@(_timerdatve.Month-1),@(_timerdatve.Day),@(_timerdatve.Hour),@(_timerdatve.Minute),@(_timerdatve.Second)),onExpiry:HuyGheDatChoTimeout, compact: true, layout: '{mn}:{sn}' });
-                                    });
-                                </script>
-
-                            }
+                            </div>
+                            <div id="box_ghe_dat_ve_chon_@datveitem.Id" class="ghenam_cell_select" style="display:none;">
+                                <img src="/Content/chonve/nhaxe/tick_green.png" style="width:25px;height:25px;" />
+                            </div>
                         </div>
-                        <div id="box_ghe_dat_ve_chon_@datveitem.Id" class="ghenam_cell_select" style="display:none;">
-                            <img src="/Content/chonve/nhaxe/tick_green.png" style="width:25px;height:25px;" />
-                        </div>
-                    </div>
-                </a>
-            </div>
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="ghenam_cell_disable"></div>
+            }
+
         </td>
     }
     else
